@@ -1,7 +1,4 @@
-use core::AssignType;
 use std::collections::HashMap;
-
-use statements::Statement;
 
 use self::{core::Var, expr::Expr, statements::GlobalStatement};
 
@@ -9,8 +6,10 @@ pub mod statements;
 pub mod expr;
 pub mod core;
 
+/// A map to holds the value assigned to a symbol
 type DeclTable = HashMap<String, (Var, Expr)>;
 
+/// Receives an AST and evaluates it node by node, where each node is a GlobalStatement
 pub fn evaluate(ast: Vec<GlobalStatement>) {
     let mut decl_table: DeclTable = HashMap::new();
 
@@ -27,10 +26,12 @@ pub fn evaluate(ast: Vec<GlobalStatement>) {
     println!("{:#?}", decl_table)
 }
 
+/// Declares a symbol assing it to an expression
 pub fn decl_symbol(dt: &mut DeclTable, id: String, var: Var, expr: Expr) {
     dt.insert(id, (var, expr));
 }
 
+/// Changes the value of a symbol from an expression
 pub fn set_symbol(dt: &mut DeclTable, id: String, expr: Expr) -> Result<(), String> {
     let decl = dt.get_mut(&id);
     match decl {
@@ -47,6 +48,7 @@ pub fn set_symbol(dt: &mut DeclTable, id: String, expr: Expr) -> Result<(), Stri
     }
 }
 
+/// Obtains the value of a symbol as an expression
 pub fn get_symbol(dt: &mut DeclTable, id: String) -> Option<&Expr> {
     match dt.get(&id) {
         None => None,
